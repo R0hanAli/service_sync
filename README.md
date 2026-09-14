@@ -212,3 +212,386 @@ Identify Service Request
 Open Service Details
 
 This provides an additional verification step before accessing detailed service information.
+
+🧾 Service Report System
+
+ServiceSync provides a structured workflow for creating digital service reports.
+
+Report Workflow
+Service Request
+       │
+       ▼
+Service Details
+       │
+       ▼
+Findings
+       │
+       ▼
+Actions Taken
+       │
+       ▼
+Parts Used
+       │
+       ▼
+Photos / Attachments
+       │
+       ▼
+Customer Signature
+       │
+       ▼
+Generate Report
+
+Reports can include:
+
+Service findings
+Actions performed
+Completion notes
+Parts used
+Images
+Technician information
+Customer information
+Customer signature
+Voice notes
+Timestamp
+✍️ Digital Signature
+
+Technicians can capture a customer's signature directly inside the application.
+
+The signature can then be associated with the service report and included in the generated PDF.
+
+This helps reduce dependency on paper-based service forms.
+
+📄 PDF Report Generation
+
+ServiceSync can generate professional service reports directly from completed service records.
+
+Generated reports can contain:
+
+Customer information
+Service request details
+Technician information
+Service findings
+Actions taken
+Parts used
+Attached images
+Customer signature
+Completion information
+
+The application uses Flutter PDF tooling to generate documents suitable for previewing, sharing, or printing.
+
+🗺️ Custom Service Maps
+
+ServiceSync includes custom map visualization using Flutter's rendering capabilities.
+
+Instead of relying entirely on paid map-rendering services, the application can render service-related:
+
+Routes
+Polylines
+Grid structures
+Location markers
+Service areas
+
+using a custom CustomPaint-based rendering approach.
+
+This provides greater control over the application's map visualization layer.
+
+💬 Communication
+
+The application supports technician communication through a realtime chat experience.
+
+Possible capabilities include:
+
+Technician-to-team messaging
+Service-related notes
+Realtime message updates
+Offline message queuing
+Timestamped conversations
+📊 Dashboard & Analytics
+
+The dashboard provides a centralized overview of field operations.
+
+Example metrics include:
+
+┌──────────────────────┬──────────────────────┐
+│ Assigned Jobs        │ Completed Jobs       │
+│        18            │        42            │
+├──────────────────────┼──────────────────────┤
+│ Pending Reports      │ Completion Rate      │
+│         6            │        82%           │
+└──────────────────────┴──────────────────────┘
+
+Charts can be used to visualize:
+
+Job completion
+Service activity
+Technician performance
+Report statistics
+Workload trends
+🗄️ Supabase Database
+
+ServiceSync uses Supabase for remote authentication, database operations, realtime communication, and storage.
+
+Database Schema
+Users
+CREATE TABLE public.users (
+  id UUID REFERENCES auth.users ON DELETE CASCADE PRIMARY KEY,
+  full_name TEXT,
+  email TEXT,
+  phone TEXT,
+  role TEXT DEFAULT 'technician',
+  profile_image TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+  assigned_jobs INTEGER DEFAULT 0,
+  completed_jobs INTEGER DEFAULT 0,
+  completion_rate NUMERIC DEFAULT 0.0
+);
+Service Requests
+CREATE TABLE public.service_requests (
+  request_id TEXT PRIMARY KEY,
+  customer_name TEXT,
+  customer_id TEXT,
+  service_type TEXT,
+  issue_description TEXT,
+  status TEXT DEFAULT 'pending',
+  assigned_technician TEXT,
+  service_date TIMESTAMP WITH TIME ZONE,
+  priority TEXT DEFAULT 'medium',
+  address TEXT,
+  latitude DOUBLE PRECISION,
+  longitude DOUBLE PRECISION,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+  qr_code TEXT
+);
+Service Reports
+CREATE TABLE public.service_reports (
+  report_id TEXT PRIMARY KEY,
+  service_request_reference TEXT,
+  findings TEXT,
+  actions_taken TEXT,
+  completion_notes TEXT,
+  images TEXT,
+  signature TEXT,
+  voice_note TEXT,
+  timestamp TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+  technician_id TEXT,
+  customer_name TEXT,
+  parts_used TEXT
+);
+🚀 Installation & Setup
+Prerequisites
+
+Make sure you have:
+
+Flutter SDK
+Dart SDK
+Android Studio or VS Code
+Android SDK
+Git
+Supabase project
+
+Verify your Flutter installation:
+
+flutter doctor
+1. Clone the Repository
+git clone <repository-url>
+cd ServiceSync
+2. Install Dependencies
+flutter pub get
+3. Configure Supabase
+
+Create/configure your Supabase project and provide the required project configuration to the application.
+
+Make sure the required:
+
+Authentication
+PostgreSQL tables
+Storage buckets
+Realtime configuration
+Database policies
+
+are configured before using production data.
+
+4. Launch the Application
+flutter run
+🔧 App Icons
+
+Native launcher icons can be generated using flutter_launcher_icons.
+
+After replacing the application logo:
+
+assets/images/logo.png
+
+Run:
+
+flutter pub run flutter_launcher_icons
+🔑 Demo Mode
+
+ServiceSync can provide a demonstration experience when Supabase credentials are unavailable or unreachable.
+
+Demo Credentials
+Email:    any@servicesync.com
+Password: demo1234
+
+Demo mode can be used to demonstrate the application's UI and core workflows without requiring an active production backend.
+
+Do not use demo credentials or mock data for production deployments.
+
+🔐 Security Considerations
+
+For production deployment, the following security practices should be implemented:
+
+Enable appropriate Supabase Row Level Security policies.
+Restrict database access based on authenticated users and roles.
+Protect storage buckets.
+Validate QR-code requests server-side.
+Avoid exposing privileged Supabase credentials in the mobile application.
+Validate all user-generated data.
+Secure file uploads.
+Restrict technician access to assigned service requests.
+Keep production credentials outside source control.
+🧪 Development & Testing
+
+Run static analysis:
+
+flutter analyze
+
+Run tests:
+
+flutter test
+
+Build an Android release:
+
+flutter build apk --release
+
+Recommended pre-release checks:
+
+flutter clean
+flutter pub get
+flutter analyze
+flutter test
+flutter build apk --release
+🔄 Service Lifecycle
+
+A typical ServiceSync workflow looks like:
+
+New Request
+     │
+     ▼
+Assigned to Technician
+     │
+     ▼
+Technician Accepts Job
+     │
+     ▼
+QR Verification
+     │
+     ▼
+On-Site Service
+     │
+     ├── Findings
+     ├── Actions
+     ├── Parts
+     └── Photos
+     │
+     ▼
+Customer Signature
+     │
+     ▼
+Service Report
+     │
+     ▼
+PDF Generation
+     │
+     ▼
+Job Completed
+📱 Main Application Modules
+Module	Description
+Authentication	Login and user access
+Dashboard	Operational overview and analytics
+Jobs	Service request management
+Reports	Digital service report creation
+Calendar	Service scheduling
+Chat	Technician communication
+Maps	Custom route and location visualization
+Settings	Application and account configuration
+🔮 Future Roadmap
+
+Potential improvements include:
+
+Role-based access control
+
+Admin web dashboard
+
+Advanced technician assignment
+
+Push notifications
+
+Background synchronization
+
+Advanced offline conflict resolution
+
+GPS technician tracking
+
+Customer portal
+
+Customer service history
+
+Automated report sharing
+
+WhatsApp report sharing
+
+Advanced analytics
+
+Inventory and parts management
+
+Multi-company support
+
+Multi-language support
+
+Cloud backup and disaster recovery
+
+Automated CI/CD deployment
+
+🎯 Project Objectives
+
+ServiceSync is designed around five core objectives:
+
+1. 📱 Digitize Field Operations
+
+Replace paper-based service workflows with a centralized mobile solution.
+
+2. 📴 Work Without Internet
+
+Allow technicians to continue working even in areas with unreliable connectivity.
+
+3. 🔄 Keep Teams Synchronized
+
+Use realtime communication and background synchronization to keep operational data current.
+
+4. 🧾 Simplify Reporting
+
+Create complete digital service reports with photos, notes, parts, and customer signatures.
+
+5. 📊 Improve Visibility
+
+Give service teams better insight into jobs, completion rates, reports, and technician activity.
+
+🤝 Contributing
+
+Contributions and improvements are welcome.
+
+Fork the repository.
+Create a feature branch:
+git checkout -b feature/your-feature
+Implement your changes.
+Run analysis and tests:
+flutter analyze
+flutter test
+Commit your changes:
+git commit -m "feat: add your feature"
+Push the branch:
+git push origin feature/your-feature
+Open a Pull Request.
+📄 License
+
+This project is currently maintained for development and demonstration purposes.
