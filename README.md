@@ -24,3 +24,81 @@ ServiceSync follows an offline-first architecture, allowing technicians to conti
 🏗️ Clean Architecture with GetX
 
 
+🏗️ Architecture
+
+ServiceSync follows Clean Architecture principles to separate presentation, domain, and data responsibilities.
+
+graph TD
+    UI[Presentation Layer<br/>Flutter Views + GetX Controllers]
+    Domain[Domain Layer<br/>Entities + Interfaces + Business Rules]
+    Data[Data Layer<br/>Repositories + Data Sources]
+    Local[Local Data Source<br/>SQLite + Sync Queue]
+    Remote[Remote Data Source<br/>Supabase]
+    DB[(PostgreSQL)]
+    RT[Supabase Realtime]
+    
+    UI --> Domain
+    Domain --> Data
+    Data --> Local
+    Data --> Remote
+    Remote --> DB
+    Remote --> RT
+Architecture Goals
+Separation of concerns
+Testable business logic
+Replaceable data sources
+Offline support
+Mock-friendly development
+Maintainable feature modules
+Scalable application structure
+📁 Project Structure
+lib/
+│
+├── core/
+│   ├── routes/
+│   │   └── app_pages.dart
+│   │
+│   ├── theme/
+│   │   └── app_theme.dart
+│   │
+│   ├── constants/
+│   ├── utils/
+│   └── widgets/
+│
+├── data/
+│   ├── datasources/
+│   │   ├── local/
+│   │   │   ├── sqlite_helper.dart
+│   │   │   └── sync_queue.dart
+│   │   │
+│   │   └── remote/
+│   │       └── supabase_service.dart
+│   │
+│   ├── models/
+│   │   ├── user_model.dart
+│   │   ├── service_request_model.dart
+│   │   ├── service_report_model.dart
+│   │   └── chat_message_model.dart
+│   │
+│   └── repositories/
+│
+├── presentation/
+│   ├── controllers/
+│   │   ├── auth_controller.dart
+│   │   ├── jobs_controller.dart
+│   │   ├── chat_controller.dart
+│   │   ├── reports_controller.dart
+│   │   └── calendar_controller.dart
+│   │
+│   └── views/
+│       ├── auth/
+│       ├── dashboard/
+│       ├── jobs/
+│       ├── reports/
+│       ├── calendar/
+│       ├── chat/
+│       └── settings/
+│
+└── main.dart
+
+The structure may evolve as additional modules and services are introduced.
