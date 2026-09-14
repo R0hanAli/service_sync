@@ -102,3 +102,56 @@ lib/
 └── main.dart
 
 The structure may evolve as additional modules and services are introduced.
+
+
+⚡ Technology Stack
+Technology	Purpose
+Flutter	Cross-platform mobile application
+Dart	Application development
+GetX	State management, routing, and dependency injection
+Supabase	Authentication, PostgreSQL, Realtime, and Storage
+PostgreSQL	Remote relational database
+SQLite	Local offline data storage
+sqflite	SQLite database integration
+Connectivity Plus	Network connectivity detection
+fl_chart	Charts and analytics
+pdf	PDF document generation
+printing	PDF preview and printing
+signature	Customer signature capture
+mobile_scanner	QR-code scanning
+Google Fonts	Application typography
+🌟 Core Features
+1. 📴 Offline-First Field Operations
+
+Technicians can continue working even when there is no internet connection.
+
+Local actions are stored in SQLite and placed into a synchronization queue.
+
+Technician Action
+       │
+       ▼
+Internet Available?
+   ┌───┴────┐
+   │        │
+  YES       NO
+   │        │
+   ▼        ▼
+Supabase   SQLite
+             │
+             ▼
+        Sync Queue
+             │
+             ▼
+      Connection Restored
+             │
+             ▼
+          Supabase
+
+The synchronization system can queue operations such as:
+
+Service reports
+Technician notes
+Service logs
+Chat messages
+Status updates
+Other locally generated records
